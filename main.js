@@ -28,6 +28,12 @@ app.ccw = function(p1, p2, p3) {
   return (p2.x - p1.x)*(p3.y - p1.y) - (p2.y - p1.y)*(p3.x - p1.x)
 }
 
+app.get_query_param = function(key) {
+  var pat = new RegExp(key + "=([^&]+)");
+  var res = pat.exec(window.location.search);
+  return res ? res[1] : null;
+}
+
 app.init = function(svg) {
   app.canvas = svg;
   app.width = app.canvas.attr('width')-2*app.padx;
@@ -39,10 +45,32 @@ app.genpoints = function(n) {
   for (var i=0; i<n; i++) {
     pt = new Point(app.random(0, app.width)+app.padx,
                    app.random(0, app.height)+app.pady);
-    //pt.idx = i;
-    points = points.concat(pt); // next point (ccw) in hull
+    points = points.concat(pt);
   }
   app.points = points;
+}
+
+app.pts2url = function() {
+  var query = "";
+  for (var i in app.points) {
+    var pt = app.points[i];
+    query += ";" + pt.x.toFixed(2) + "," + pt.y.toFixed(2);
+  }
+  return("pts=" + query.slice(1) + "&hull=" + (app.hull ? "1" : "0"));
+}
+
+app.url2pts = function() {
+  var pts = [];
+  var pairs = app.get_query_param("pts").split(';');
+  for (var i in pairs) {
+    var coords = pairs[i].split(",");
+    var ptx = parseFloat(coords[0]), pty = parseFloat(coords[1]);
+    pt = new Point(ptx, pty);
+    pts = pts.concat(pt);
+  }
+  app.points = pts;
+  if (app.get_query_param("hull") == "1")
+    app.monotone_chain(app.points);
 }
 
 app.graham_scan = function(points) { // doesn't work
@@ -200,6 +228,13 @@ $('document').ready(function() {
     // $('#canvas').empty();
     app.draw();
   });
+  $('#share').click(function() {
+    $('#shareurl').val(window.location.href.replace(/\?.*$/,'') + "?" + app.pts2url()).select();
+  })
+  if (window.location.search) {
+    app.url2pts();
+    app.draw();
+  }
   $('#make-hull').click(function() {
     app.monotone_chain(app.points);
     // $('#canvas').empty();

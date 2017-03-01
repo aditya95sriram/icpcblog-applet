@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>D3 Tutorial</title>
+  <title>ICPC Blog Applet</title>
   <script type="text/javascript" src="d3.min.js"></script>
   <script type="text/javascript" src="jquery-3.1.1.min.js"></script>
   <script type="text/javascript" src="main.js"></script>
@@ -11,13 +11,16 @@
 <body>
   <svg id="canvas" width="500" height="500"></svg>
   <br>
-  <input id="num-pts" type="number" name="num-pts">
-  <label for="num-pts">Number of points</label>
+  <input id="num-pts" type="number" name="num-pts" placeholder="Number of points">
+  <!-- <label for="num-pts">Number of points</label> -->
   <button id="gen-pts">Populate</button>
   <button id="make-hull">Find Hull</button>
   <p id="coeffs"></p>
   <input id="sliderA" type="range" min="0.0" max="1.0" step="0.01"/>
   <input id="sliderB" type="range" min="0.0" max="1.0" step="0.01"/>
   <input id="sliderC" type="range" min="0.0" max="1.0" step="0.01"/>
+  <br/>
+  <button id="share">Share</button>
+  <input id="shareurl" type="text">
 </body>
 </html>
