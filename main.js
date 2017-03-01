@@ -5,7 +5,8 @@ Number.prototype.mod = function(n) {
 function Point(x,y) {
   this.x = x;
   this.y = y;
-  this.state = 0; // 0 - not in hull, 1 - in hull, 2 - if user point
+  this.state = 0; // 0 - not in hull, 1 - in hull, 2 - if user point,
+                  // 3 - triangle ABC point
   this.nextpt = null; // next point (ccw) in hull
 }
 Point.prototype.sub = function(p2) {
