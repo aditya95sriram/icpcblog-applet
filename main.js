@@ -152,8 +152,12 @@ app.draw = function() {
   app.drawnpts.append('circle')
               .attr('r', app.ptrad)
               .style('fill',function(d) {return ['blue','red','black','green'][d.state];})
-  app.drawnpts.append("text").text(function(d) {return d.label || "";}).attr("dx","-20");
+  app.drawnpts.append("text")
+              .attr("dx","-20")
+              .style("background-color","white")
+              .text(function(d) {return d.label || "";});
 
+  var tri = app.hull ? [app.hull[0]] : [];
   for(var i in pts) {
     var pt = pts[i];
     if (pt.state == 1 || pt.state == 3) {
@@ -162,6 +166,17 @@ app.draw = function() {
                 .attr('x2', pt.nextpt.x).attr('y2', pt.nextpt.y)
                 .attr('stroke-width',2).attr('stroke','black');
     }
+    if (pt.label == 'B' || pt.label == 'C') { // keep note of pts in triangle
+      tri = tri.concat(pt);
+    }
+  }
+  // draw dashed lines to show triangle ABC
+  for (var i=1; i<tri.length; i++) {
+    app.canvas.append('line')
+              .attr('x1', tri[0].x).attr('y1', tri[0].y)
+              .attr('x2', tri[i].x).attr('y2', tri[i].y)
+              .attr('stroke-width',2).attr('stroke','gray')
+              .attr('stroke-dasharray',"5,5");
   }
 }
 
